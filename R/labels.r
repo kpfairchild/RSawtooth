@@ -1,4 +1,4 @@
-#' Parse Sawtooth Labels File
+#' Parse Sawtooth Software Labels File
 #'
 #' @param path File path to a Sawtooth Software .labels file
 #'
@@ -8,34 +8,36 @@
 #' @examples parseLabelsFile("golf.labels")
 parseLabelsFile <- function(path)
 {
-  labelsXML<-read_xml(path)
+  labelsXML <- xml2::read_xml(path)
   #****
-  attributesXML <-xml_find_all(labelsXML,".//attribute|.//none")
-  attributeLabels <- tibble(label = xml_text(xml_find_all(attributesXML,"./label")))
+  attributesXML <- xml2::xml_find_all(labelsXML,".//attribute|.//none")
+  attributeLabels <- tibble(label = xml2::xml_text(xml2::xml_find_all(attributesXML,"./label")))
 
   #****
-  levelXML <- xml_find_all(attributesXML,"./level")
-  levelLabels <- xml_text(levelXML)
+  levelXML <- xml2::xml_find_all(attributesXML,"./level")
+  levelLabels <- xml2::xml_text(levelXML)
 
   #****
-  attributeLevels <- sapply(xml_find_all(attributesXML,"//attribute"),function(x){ length(xml_find_all(x,".//level"))})
+  attributeLevels <- sapply(xml2::xml_find_all(attributesXML, "//attribute"), function(x) {
+    length(xml2::xml_find_all(x, ".//level"))
+  })
 
   labelsData <-
     tibble(
       attribute = rep(1:length(attributeLevels),times=attributeLevels),
       level = unlist(sapply(attributeLevels,function(x){1:x})),
-      label =levelLabels
+      label = levelLabels
     )
-  utilityColumns <- as.numeric(xml_attr(xml_find_all(attributesXML,"//level"),"column"))
+  utilityColumns <- as.numeric(xml2::xml_attr(xml2::xml_find_all(attributesXML,"//level"),"column"))
 
   nAttr <- length(attributeLevels)
-  attrCoding <- xml_attr(attributesXML,"coding")[1:nAttr]
+  attrCoding <- xml2::xml_attr(attributesXML,"coding")[1:nAttr]
 
   labelsFileOutput <-list(attributeLevels = attributeLevels,
                           labelsData = labelsData,
                           attrCoding = attrCoding,
                           attributeLabels = attributeLabels,
-                          hasNone = length(xml_find_all(attributesXML,"//none"))>0,
+                          hasNone = length(xml2::xml_find_all(attributesXML,"//none"))>0,
                           utilityColumns = utilityColumns
   )
   class(labelsFileOutput) <- "SSLabelData"
