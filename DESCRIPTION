@@ -10,5 +10,9 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
+<<<<<<< HEAD
 Depends: tidyverse
 Imports: readxl,openxlsx,xml2
+=======
+Depends: tidyverse,readxl,openxlsx,xml2
+>>>>>>> 3805256577d2f36653bc3f571935f00be7c54674
