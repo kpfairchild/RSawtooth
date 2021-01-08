@@ -2,7 +2,7 @@
 #'
 #' @param path File path to a Sawtooth Software .labels file
 #'
-#' @return List of labels metadata
+#' @return Returns list with labels metadata
 #' @export
 #'
 #' @examples parseLabelsFile("golf.labels")
